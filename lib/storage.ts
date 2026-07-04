@@ -43,27 +43,35 @@ export function loadAdminItems<T>(key: string, fallback: T): T {
   }
 }
 
-export function loadFaqItems() {
+export function loadFaqItems<T>(fallback: T) {
   if (typeof window === "undefined") {
-    return [];
+    return fallback;
   }
 
   try {
     const saved = window.localStorage.getItem("homerestaurant-faqs");
-    return saved ? JSON.parse(saved) : [];
+    return saved ? JSON.parse(saved) : fallback;
   } catch {
-    return [];
+    return fallback;
   }
 }
 
 export function saveFaqItems(items: unknown[]) {
   if (typeof window !== "undefined") {
-    window.localStorage.setItem("homerestaurant-faqs", JSON.stringify(items));
+    try {
+      window.localStorage.setItem("homerestaurant-faqs", JSON.stringify(items));
+    } catch {
+      // ignore storage errors
+    }
   }
 }
 
 export function saveAdminItems<T>(key: string, value: T) {
   if (typeof window !== "undefined") {
-    window.localStorage.setItem(key, JSON.stringify(value));
+    try {
+      window.localStorage.setItem(key, JSON.stringify(value));
+    } catch {
+      // ignore storage errors
+    }
   }
 }

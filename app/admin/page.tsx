@@ -30,6 +30,58 @@ export default function AdminPage() {
     published: false,
   });
   const [faqForm, setFaqForm] = useState({ question: "", answer: "" });
+  const [menuImageDragActive, setMenuImageDragActive] = useState(false);
+
+  const fileToDataUrl = (file: File) =>
+    new Promise<string>((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => {
+        if (typeof reader.result === "string") {
+          resolve(reader.result);
+        } else {
+          reject(new Error("Unable to read file"));
+        }
+      };
+      reader.onerror = () => reject(reader.error);
+      reader.readAsDataURL(file);
+    });
+
+  const handleMenuImageFile = async (file: File) => {
+    try {
+      const dataUrl = await fileToDataUrl(file);
+      setMenuForm((current) => ({ ...current, image: dataUrl }));
+    } catch {
+      // ignore invalid files
+    }
+  };
+
+  const handleMenuImageInput = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files?.[0]) {
+      void handleMenuImageFile(event.target.files[0]);
+    }
+  };
+
+  const handleMenuDrop = (event: React.DragEvent<HTMLDivElement>) => {
+    event.preventDefault();
+    event.stopPropagation();
+    setMenuImageDragActive(false);
+
+    if (event.dataTransfer.files?.[0]) {
+      void handleMenuImageFile(event.dataTransfer.files[0]);
+    }
+  };
+
+  const handleMenuDragOver = (event: React.DragEvent<HTMLDivElement>) => {
+    event.preventDefault();
+    event.stopPropagation();
+    setMenuImageDragActive(true);
+  };
+
+  const handleMenuDragLeave = (event: React.DragEvent<HTMLDivElement>) => {
+    event.preventDefault();
+    event.stopPropagation();
+    setMenuImageDragActive(false);
+  };
 
   useEffect(() => {
     saveLeads(leads);
@@ -78,6 +130,15 @@ export default function AdminPage() {
 
   const updateMenuItem = (id: string, field: "name" | "description" | "category" | "image" | "isTodaySpecial", value: string | boolean) => {
     setMenu((current) => current.map((item) => (item.id === id ? { ...item, [field]: value } : item)));
+  };
+
+  const handleUpdateMenuImage = async (id: string, file: File) => {
+    try {
+      const dataUrl = await fileToDataUrl(file);
+      updateMenuItem(id, "image", dataUrl);
+    } catch {
+      // ignore invalid files
+    }
   };
 
   const deleteMenuItem = (id: string) => {
@@ -211,6 +272,20 @@ export default function AdminPage() {
               </select>
               <textarea required placeholder="Description" rows={3} value={menuForm.description} onChange={(event) => setMenuForm({ ...menuForm, description: event.target.value })} className="rounded-2xl border border-slate-200 px-4 py-3 md:col-span-2" />
               <input placeholder="Image URL" value={menuForm.image} onChange={(event) => setMenuForm({ ...menuForm, image: event.target.value })} className="rounded-2xl border border-slate-200 px-4 py-3" />
+              <div
+                onDrop={handleMenuDrop}
+                onDragOver={handleMenuDragOver}
+                onDragLeave={handleMenuDragLeave}
+                className={`rounded-2xl border border-dashed px-4 py-6 text-center text-sm text-slate-500 ${menuImageDragActive ? "border-amber-500 bg-amber-50" : "border-slate-200 bg-slate-50"}`}
+              >
+                <input id="menu-image-file" type="file" accept="image/*" onChange={handleMenuImageInput} className="hidden" />
+                <label htmlFor="menu-image-file" className="cursor-pointer">
+                  Drop an image here, or <span className="font-semibold text-amber-700">browse files</span>
+                </label>
+                {menuForm.image ? (
+                  <img src={menuForm.image} alt="Menu preview" className="mx-auto mt-4 h-36 w-full max-w-xs rounded-2xl object-cover" />
+                ) : null}
+              </div>
               <label className="flex items-center gap-2 rounded-2xl border border-slate-200 px-4 py-3 text-sm font-medium text-slate-700">
                 <input type="checkbox" checked={menuForm.isTodaySpecial} onChange={(event) => setMenuForm({ ...menuForm, isTodaySpecial: event.target.checked })} />
                 Mark as today&apos;s special
@@ -233,6 +308,13 @@ export default function AdminPage() {
                   <option value="monthly">Monthly</option>
                 </select>
                 <input value={item.image} onChange={(event) => updateMenuItem(item.id, "image", event.target.value)} placeholder="Image URL" className="mt-3 w-full rounded-2xl border border-slate-200 px-4 py-3" />
+                <div className="mt-3">
+                  <label className="mb-2 block text-sm font-medium text-slate-700">Upload new image</label>
+                  <input type="file" accept="image/*" onChange={(event) => event.target.files?.[0] && void handleUpdateMenuImage(item.id, event.target.files[0])} className="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-700" />
+                </div>
+                {item.image ? (
+                  <img src={item.image} alt={`${item.name} preview`} className="mt-3 h-44 w-full rounded-2xl object-cover" />
+                ) : null}
                 <label className="mt-3 flex items-center gap-2 text-sm font-medium text-slate-700">
                   <input type="checkbox" checked={item.isTodaySpecial ?? false} onChange={(event) => updateMenuItem(item.id, "isTodaySpecial", event.target.checked)} />
                   Today&apos;s special

@@ -2,16 +2,19 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { blogPosts, corporateBenefits, faqItems as initialFaqs, menuItems, testimonials } from "@/lib/site-data";
+import { blogPosts as initialBlogs, corporateBenefits, faqItems as initialFaqs, menuItems as initialMenu, testimonials } from "@/lib/site-data";
 import { loadAdminItems } from "@/lib/storage";
 
 export default function Home() {
   const [faqItems, setFaqItems] = useState(initialFaqs);
+  const [menuItems, setMenuItems] = useState(initialMenu);
+  const [blogPosts, setBlogPosts] = useState(initialBlogs);
   const todaySpecial = menuItems.find((item) => item.isTodaySpecial) ?? menuItems[0];
 
   useEffect(() => {
-    const savedFaqs = loadAdminItems("homerestaurant-faqs", initialFaqs);
-    setFaqItems(savedFaqs);
+    setFaqItems(loadAdminItems("homerestaurant-faqs", initialFaqs));
+    setMenuItems(loadAdminItems("homerestaurant-menu", initialMenu));
+    setBlogPosts(loadAdminItems("homerestaurant-blogs", initialBlogs));
   }, []);
 
   return (
