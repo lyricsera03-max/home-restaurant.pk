@@ -47,6 +47,9 @@ export const metadata: Metadata = {
     description:
       "Fresh homemade meals, daily specials, and corporate meal plans for Karachi.",
   },
+  verification: {
+    google: "Zx7wpPBNC_d3ypLnsFJ8jVmucu8ftWkFatBsY1dZup0",
+  },
 };
 
 export default function RootLayout({
@@ -62,6 +65,7 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
+        <meta name="google-site-verification" content="Zx7wpPBNC_d3ypLnsFJ8jVmucu8ftWkFatBsY1dZup0" />
         {gaId ? (
           <>
             <Script src={`https://www.googletagmanager.com/gtag/js?id=${gaId}`} strategy="afterInteractive" />
