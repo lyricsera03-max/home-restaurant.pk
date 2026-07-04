@@ -6,6 +6,6 @@ export default function robots(): MetadataRoute.Robots {
       userAgent: "*",
       allow: "/",
     },
-    sitemap: "https://www.homerestaurant.com/sitemap.xml",
+    sitemap: "https://home-restaurant-pk.vercel.app/sitemap.xml",
   };
 }

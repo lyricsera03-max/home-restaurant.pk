@@ -15,7 +15,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://www.homerestaurant.com"),
+  metadataBase: new URL("https://home-restaurant-pk.vercel.app"),
   title: {
     default: "HomeRestaurant | Fresh Homemade Meals in Karachi",
     template: "%s | HomeRestaurant",
@@ -36,7 +36,7 @@ export const metadata: Metadata = {
     title: "HomeRestaurant | Fresh Homemade Meals in Karachi",
     description:
       "Fresh homemade meals, daily specials, and corporate meal plans for Karachi.",
-    url: "https://www.homerestaurant.com",
+    url: "https://home-restaurant-pk.vercel.app",
     siteName: "HomeRestaurant",
     locale: "en_US",
     type: "website",
