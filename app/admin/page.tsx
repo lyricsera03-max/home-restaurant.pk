@@ -274,14 +274,16 @@ export default function AdminPage() {
               <input placeholder="Image URL" value={menuForm.image} onChange={(event) => setMenuForm({ ...menuForm, image: event.target.value })} className="rounded-2xl border border-slate-200 px-4 py-3" />
               <div
                 onDrop={handleMenuDrop}
+                onDragEnter={handleMenuDragOver}
                 onDragOver={handleMenuDragOver}
                 onDragLeave={handleMenuDragLeave}
                 className={`rounded-2xl border border-dashed px-4 py-6 text-center text-sm text-slate-500 ${menuImageDragActive ? "border-amber-500 bg-amber-50" : "border-slate-200 bg-slate-50"}`}
               >
                 <input id="menu-image-file" type="file" accept="image/*" onChange={handleMenuImageInput} className="hidden" />
-                <label htmlFor="menu-image-file" className="cursor-pointer">
-                  Drop an image here, or <span className="font-semibold text-amber-700">browse files</span>
+                <label htmlFor="menu-image-file" className="mx-auto inline-flex cursor-pointer rounded-full border border-amber-500 bg-white px-4 py-2 text-sm font-semibold text-amber-700 shadow-sm transition hover:bg-amber-50">
+                  Upload from PC
                 </label>
+                <p className="mt-3">or drag and drop an image into this box</p>
                 {menuForm.image ? (
                   <img src={menuForm.image} alt="Menu preview" className="mx-auto mt-4 h-36 w-full max-w-xs rounded-2xl object-cover" />
                 ) : null}
