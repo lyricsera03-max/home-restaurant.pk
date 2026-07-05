@@ -10,7 +10,7 @@ export default function AdminPage() {
   const [leads, setLeads] = useState(() => loadLeads());
   const [menu, setMenu] = useState(() => loadAdminItems("homerestaurant-menu", initialMenu));
   const [blogs, setBlogs] = useState(() => loadAdminItems("homerestaurant-blogs", initialBlogs));
-  const [faqs, setFaqs] = useState(() => loadFaqItems() as typeof initialFaqs);
+  const [faqs, setFaqs] = useState(() => loadFaqItems(initialFaqs) as typeof initialFaqs);
   const [activeTab, setActiveTab] = useState<"dashboard" | "leads" | "menu" | "blogs" | "faq">("dashboard");
   const [menuForm, setMenuForm] = useState({
     name: "",
